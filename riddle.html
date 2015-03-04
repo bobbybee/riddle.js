@@ -6,14 +6,40 @@
 
   <style>
 
+  body {
+    background-color: #EEE;
+  }
+
+  .riddle-page {
+    background-color: #FFFFFF;
+    position: relative;
+    width: 50%;
+  }
+
+  .riddle-page:before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+  }
+
+  .riddle-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+  }
+
   </style>
 
   <script>
 
-  var editor;
+  var editor, page;
 
   window.addEventListener("load", function() {
     editor = new Riddle(document.getElementById("editor"));
+    page = new Page(editor);
+    page.container.innerHTML = "Lorem ipsum";
   });
 
   </script>

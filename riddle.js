@@ -13,6 +13,13 @@ function Riddle(container) {
 // Riddle editor - Riddle object for the editor itself
 
 function Page(editor) {
+  this.containerContainer = document.createElement("div");
+  this.containerContainer.className = "riddle-page";
+
   this.container = document.createElement("div");
-  editor.container.appendChild(this.container);
+  this.container.className = "riddle-content";
+
+  this.containerContainer.appendChild(this.container);
+
+  editor.container.appendChild(this.containerContainer);
 }
