@@ -18,6 +18,7 @@ function Page(editor) {
 
   this.container = document.createElement("div");
   this.container.className = "riddle-content";
+  this.container.setAttribute("contenteditable", "true");
 
   this.containerContainer.appendChild(this.container);
 
