@@ -3,11 +3,26 @@
 <head>
   <title>Riddle Shell</title>
   <script src="riddle.js"></script>
+
+  <style>
+
+  </style>
+
   <script>
-  var riddle = new Riddle();
+
+  var editor;
+
+  window.addEventListener("load", function() {
+    editor = new Riddle(document.getElementById("editor"));
+  });
+
   </script>
+
 </head>
 <body>
+
+<div id="editor">
+</div>
 
 </body>
 </html>
