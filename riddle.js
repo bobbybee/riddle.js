@@ -33,28 +33,44 @@ function Page(editor) {
 
   var that = this;
 
+  this.container.addEventListener("keydown", function(event) {
+    that.onKeydown(event);
+  });
+
   this.container.addEventListener("keypress", function(event) {
     that.onKeypress(event);
-  })
+  });
 
   this.containerContainer.appendChild(this.container);
 
   editor.container.appendChild(this.containerContainer);
 }
 
-Page.prototype.onKeypress = function(event) {
-  // event.char isn't implemented at the time of writing, but charCode is deprecated.
-  var char = event.char || String.fromCharCode(event.charCode);
+Page.prototype.onKeydown = function(event) {
+  // keyCode is deprecated TODO: proper polyfill?
+  var char = event.keyCode;
 
-  if(char == 'b' && event.ctrlKey) {
-    document.execCommand('bold', false, null);
+  var flag = true;
+
+  if(char == 66 && event.ctrlKey) { // ctrl-b
+    document.execCommand('bold', null, null);
   }
 
-  if(char == 'i' && event.ctrlKey) {
+  else if(char == 73 && event.ctrlKey) { // ctrl-i
     document.execCommand('italic', false, null);
   }
 
-  if(char == 'u' && event.ctrlKey) {
+  else if(char == 85 && event.ctrlKey) { // ctrl-u
     document.execCommand("underline", false, null);
   }
+
+  else flag = false;
+
+  if(flag) event.preventDefault();
+}
+
+Page.prototype.onKeypress = function(e) {
+  document.execCommand('insertText', false, e.char || String.fromCharCode(e.charCode));
+
+  e.preventDefault();
 }
