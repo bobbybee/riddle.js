@@ -64,6 +64,10 @@ Page.prototype.onKeydown = function(event) {
     document.execCommand("underline", false, null);
   }
 
+  else if(char == 8 || char == 127) { // delete / backspace?
+    document.execCommand("delete", false, null);
+  }
+
   else flag = false;
 
   if(flag) event.preventDefault();
