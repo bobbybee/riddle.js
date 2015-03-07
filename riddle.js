@@ -1,7 +1,7 @@
 // Riddle constructor
 // Riddle objects represent the entire editor
 // parameters:
-// DOMElement container - container for the editor
+// DOMElement containerContainer - container for the editor
 
 function Riddle(containerContainer) {
   this.containerContainer = containerContainer;
@@ -35,16 +35,27 @@ Riddle.prototype.onKeydown = function(event) {
 
   var flag = true;
 
-  if(char == 66 && event.ctrlKey) { // ctrl-b
+  if(char == 66 && event.ctrlKey) { // ctrl-b (bold)
     document.execCommand("bold", null, null);
   }
 
-  else if(char == 73 && event.ctrlKey) { // ctrl-i
+  else if(char == 73 && event.ctrlKey) { // ctrl-i (italics)
     document.execCommand("italic", false, null);
   }
 
-  else if(char == 85 && event.ctrlKey) { // ctrl-u
+  else if(char == 85 && event.ctrlKey) { // ctrl-u (underline)
     document.execCommand("underline", false, null);
+  }
+
+  else if(char == 65 && event.ctrlKey) { // ctrl-a (select all)
+    document.execCommand("selectAll", false, null);
+  }
+
+  else if( (char == 67 || char == 86 || char == 88) && event.ctrlKey) { // ctrl-c (copy to clipboard) or ctrl-v (paste) or ctrl-x (cut)
+    // silently ignore clipboard related actions
+    // let the browser handle them for us
+
+    flag = false;
   }
 
   else if(char == 8 || char == 127) { // delete / backspace
