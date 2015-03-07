@@ -63,6 +63,19 @@ Page.prototype.onKeydown = function(event) {
   }
 
   else if(char == 8 || char == 127) { // delete / backspace
+    // find what character is being deleted
+
+    var range = window.getSelection().getRangeAt(0);
+    var txt = range.startContainer;
+    if(txt.innerHTML) txt = txt.innerHTML;
+    if(txt.data) txt = txt.data;
+
+    var deletedCharacter = txt[range.startOffset - 2];
+
+    if(deletedCharacter == '\u200B') {
+      document.execCommand("delete", false, null);
+    }
+
     document.execCommand("delete", false, null);
   }
 
