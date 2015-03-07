@@ -54,7 +54,6 @@ Riddle.prototype.onKeydown = function(event) {
   else if( (char == 67 || char == 86 || char == 88) && event.ctrlKey) { // ctrl-c (copy to clipboard) or ctrl-v (paste) or ctrl-x (cut)
     // silently ignore clipboard related actions
     // let the browser handle them for us
-
     flag = false;
   }
 
@@ -85,7 +84,7 @@ Riddle.prototype.onKeydown = function(event) {
 }
 
 Riddle.prototype.onKeypress = function(e) {
-  if(e.charCode != 0) {
+  if(e.charCode != 0 && !e.ctrlKey) {
     document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
     e.preventDefault();
   }
