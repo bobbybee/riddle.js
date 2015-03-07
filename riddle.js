@@ -4,6 +4,8 @@
 // DOMElement containerContainer - container for the editor
 
 function Riddle(containerContainer) {
+  window.riddle = this;
+
   this.containerContainer = containerContainer;
 
   // the actual container creation
@@ -57,7 +59,7 @@ Riddle.prototype.onKeydown = function(event) {
     flag = false;
   }*/
 
-  else if(char == 80 && event.ctrlKey) { // ctrl-p (print)
+  else if(char == 80 && event.ctrlKey && !!window.chrome) { // ctrl-p (print) under chrome. Firefox has a seperate printing implementation
     // for printing, we only print the container element
     // to do this, we serialize the editor as HTML,
     // open it in a new tab with a data URI
@@ -113,5 +115,18 @@ Riddle.prototype.onKeypress = function(e) {
   if(e.charCode != 0 && !e.ctrlKey) {
     document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
     e.preventDefault();
+  }
+}
+
+// implement printing for FF
+
+if(!window.chrome) {
+  window.onbeforeprint = function(e) {
+    riddle.cachedPage = document.body.innerHTML;
+    document.body.innerHTML = riddle.container.innerHTML;
+  }
+
+  window.onafterprint = function(e) {
+    document.body.innerHTML = riddle.cachedPage;
   }
 }
