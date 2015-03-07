@@ -1,7 +1,4 @@
-// Riddle constructor
-// Riddle objects represent the entire editor
-// parameters:
-// DOMElement containerContainer - container for the editor
+// containerContainer is a DOM element in which the Riddle editor is contained
 
 function Riddle(containerContainer) {
   window.riddle = this;
@@ -35,7 +32,7 @@ Riddle.prototype.onKeydown = function(event) {
   // keyCode is deprecated TODO: proper polyfill?
   var char = event.keyCode;
 
-  var flag = true;
+  var flag = true; // this flag will determine whether the default behaviour of the event should run
 
   if(char == 66 && event.ctrlKey) { // ctrl-b (bold)
     document.execCommand("bold", null, null);
@@ -53,31 +50,32 @@ Riddle.prototype.onKeydown = function(event) {
     document.execCommand("selectAll", false, null);
   }
 
-  /*else if( (char == 67 || char == 86 || char == 88) && event.ctrlKey) { // ctrl-c (copy to clipboard) or ctrl-v (paste) or ctrl-x (cut)
-    // silently ignore clipboard related actions
-    // let the browser handle them for us
-    flag = false;
-  }*/
-
   else if(char == 80 && event.ctrlKey && !!window.chrome) { // ctrl-p (print) under chrome. Firefox has a seperate printing implementation
-    // for printing, we only print the container element
-    // to do this, we serialize the editor as HTML,
-    // open it in a new tab with a data URI
-    // and append a print onload command
+    this.tabDump("text/html", true);
+  }
 
-    var page = this.container.innerHTML;
-    page = page.replace(/\u200B/g, ""); // remove markers
+  else if(char == 83 && event.ctrlKey) { // ctrl-s (save). we need an elegant solution to this
+    this.tabDump("application/force-download", false);
+  }
 
-    page = '<!-- Printed by Riddle - libre HTML5 editor !-->' +
-           '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>' +
-           "<script>onload=function(){print()}</script></head><body>" +
-           page +
-           "</body></html>";
+  else if(char == 79 && event.ctrlKey) { // ctrl-o (open). we need an elegant solution to this
+    var button = document.createElement("input");
+    button.setAttribute("type", "file");
 
-    var dataURI = "data:text/html, " + encodeURIComponent(page);
+    button.addEventListener("change", function(e) {
+      var file = e.target.files[0];
 
-    var newWindow = window.open(dataURI, "_blank", "menubar=0,toolbar=0,location=0,personalbar=0,status=0");
-    newWindow.focus();
+      var reader = new FileReader();
+      reader.onload = (function(t_file) {
+        return function(e) {
+          riddle.container.innerHTML = e.target.result;
+        }
+      })(file);
+
+      reader.readAsText(file);
+    });
+
+    button.click();
   }
 
   else if(char == 8 || char == 127) { // delete / backspace
@@ -116,6 +114,27 @@ Riddle.prototype.onKeypress = function(e) {
     document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
     e.preventDefault();
   }
+}
+
+Riddle.prototype.tabDump = function(mimeType, autoPrint) {
+  // for printing, we only print the container element
+  // to do this, we serialize the editor as HTML,
+  // open it in a new tab with a data URI
+  // and append a print onload command
+
+  var page = this.container.innerHTML;
+  page = page.replace(/\u200B/g, ""); // remove markers
+
+  page = '<!-- Authored with Riddle - libre HTML5 editor !-->' +
+         '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>' +
+         (autoPrint ? "<script>onload=function(){print()}</script></head><body>" : '') +
+         page +
+         "</body></html>";
+
+  var dataURI = "data:"+mimeType+", " + encodeURIComponent(page);
+
+  var newWindow = window.open(dataURI, "_blank", "menubar=0,toolbar=0,location=0,personalbar=0,status=0");
+  newWindow.focus();
 }
 
 // implement printing for FF
