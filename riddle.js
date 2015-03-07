@@ -89,7 +89,9 @@ Page.prototype.onKeydown = function(event) {
 }
 
 Page.prototype.onKeypress = function(e) {
-  document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
+  if(e.charCode != 0) {
+    document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
 
-  e.preventDefault();
+    e.preventDefault();
+  }
 }
