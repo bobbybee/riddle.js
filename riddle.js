@@ -22,12 +22,10 @@ function Page(editor) {
   // the actual container creation
   this.container = document.createElement("div");
   this.container.className = "riddle-content";
+  this.container.innerHTML = "\u200B"; // this is a no width character which fixes a cursor location bug
 
   // contenteditable creates a very crude text editor in modern browsers. sweet, huh?
   this.container.setAttribute("contenteditable", "true");
-
-  // all content is within a span; create the intial span
-  this.container.appendChild(document.createElement('span'));
 
   // setup events for smooth editing
 
@@ -69,7 +67,7 @@ Page.prototype.onKeydown = function(event) {
   }
 
   else if(char == 10 || char == 13) { // line feed / carriage return (enter / return key)
-    document.execCommand("insertText", false, "\n");
+    document.execCommand("insertText", false, "\n\u200B");
   }
 
   else flag = false;
