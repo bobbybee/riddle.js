@@ -19,7 +19,7 @@ function Riddle(containerContainer) {
   var that = this;
 
   this.container.addEventListener("keydown", function(event) {
-    that.onKeydown(event);
+    return that.onKeydown(event);
   });
 
   this.container.addEventListener("keypress", function(event) {
@@ -57,6 +57,27 @@ Riddle.prototype.onKeydown = function(event) {
     flag = false;
   }*/
 
+  else if(char == 80 && event.ctrlKey) { // ctrl-p (print)
+    // for printing, we only print the container element
+    // to do this, we serialize the editor as HTML,
+    // open it in a new tab with a data URI
+    // and append a print onload command
+
+    var page = this.container.innerHTML;
+    page = page.replace(/\u200B/g, ""); // remove markers
+
+    page = '<!-- Printed by Riddle - libre HTML5 editor !-->' +
+           '<!DOCTYPE html><html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>' +
+           "<script>onload=function(){print()}</script></head><body>" +
+           page +
+           "</body></html>";
+
+    var dataURI = "data:text/html, " + encodeURIComponent(page);
+
+    var newWindow = window.open(dataURI, "_blank", "menubar=0,toolbar=0,location=0,personalbar=0,status=0");
+    newWindow.focus();
+  }
+
   else if(char == 8 || char == 127) { // delete / backspace
     // find what character is being deleted
 
@@ -75,12 +96,17 @@ Riddle.prototype.onKeydown = function(event) {
   }
 
   else if(char == 10 || char == 13) { // line feed / carriage return (enter / return key)
-    document.execCommand("insertText", false, "\n\u200B");
+    document.execCommand("insertHTML", false, "<br/>&#8203;");
   }
 
   else flag = false;
 
-  if(flag) event.preventDefault();
+  if(flag) {
+    event.preventDefault();
+    return false;
+  }
+
+  return true;
 }
 
 Riddle.prototype.onKeypress = function(e) {
