@@ -10,27 +10,13 @@
     background-color: #EEE;
   }
 
-  .riddle-page {
-    background-color: #FFFFFF;
-    position: relative;
-    width: 50%;
-    left: 25%;
-    overflow: hidden;
-    margin: 10px;
-  }
-
-  .riddle-page:before {
-    content: "";
-    display: block;
-    padding-top: 100%;
-  }
-
   .riddle-content {
+    background-color: #FFF;
     position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    top: 5%;
+    width: 98%;
+    height: 94%;
+    overflow: auto;
   }
 
   </style>
@@ -41,7 +27,6 @@
 
   window.addEventListener("load", function() {
     editor = new Riddle(document.getElementById("editor"));
-    page = new Page(editor);
   });
 
   </script>

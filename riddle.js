@@ -3,21 +3,8 @@
 // parameters:
 // DOMElement container - container for the editor
 
-function Riddle(container) {
-  this.container = container;
-}
-
-// Page constructor
-// GUI element for a page in a document
-// parameters:
-// Riddle editor - Riddle object for the editor itself
-
-function Page(editor) {
-  this.editor = editor;
-
-  // a container-within-a-container hack is used to maintain sizing with CSS, not JS
-  this.containerContainer = document.createElement("div");
-  this.containerContainer.className = "riddle-page";
+function Riddle(containerContainer) {
+  this.containerContainer = containerContainer;
 
   // the actual container creation
   this.container = document.createElement("div");
@@ -40,11 +27,9 @@ function Page(editor) {
   });
 
   this.containerContainer.appendChild(this.container);
-
-  editor.container.appendChild(this.containerContainer);
 }
 
-Page.prototype.onKeydown = function(event) {
+Riddle.prototype.onKeydown = function(event) {
   // keyCode is deprecated TODO: proper polyfill?
   var char = event.keyCode;
 
@@ -86,31 +71,11 @@ Page.prototype.onKeydown = function(event) {
   else flag = false;
 
   if(flag) event.preventDefault();
-
-  this.balanceScroll();
 }
 
-Page.prototype.onKeypress = function(e) {
+Riddle.prototype.onKeypress = function(e) {
   if(e.charCode != 0) {
     document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
     e.preventDefault();
-    this.balanceScroll();
-  }
-}
-
-Page.prototype.balanceScroll = function() {
-  var pageOverflow = this.containerContainer.scrollHeight / this.containerContainer.offsetHeight;
-
-  if(pageOverflow > 1) { // scrolling is happening
-    var numPages = Math.ceil(pageOverflow - 1);
-
-    var page = null;
-
-    for(var i = 0; i < numPages; ++i) {
-      page = new Page(this.editor);
-    }
-
-    page.container.focus();
-    window.scrollBy(0, document.body.offsetHeight * 0.9);
   }
 }
