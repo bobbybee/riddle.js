@@ -51,11 +51,11 @@ Riddle.prototype.onKeydown = function(event) {
     document.execCommand("selectAll", false, null);
   }
 
-  else if( (char == 67 || char == 86 || char == 88) && event.ctrlKey) { // ctrl-c (copy to clipboard) or ctrl-v (paste) or ctrl-x (cut)
+  /*else if( (char == 67 || char == 86 || char == 88) && event.ctrlKey) { // ctrl-c (copy to clipboard) or ctrl-v (paste) or ctrl-x (cut)
     // silently ignore clipboard related actions
     // let the browser handle them for us
     flag = false;
-  }
+  }*/
 
   else if(char == 8 || char == 127) { // delete / backspace
     // find what character is being deleted
