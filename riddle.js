@@ -53,19 +53,23 @@ Page.prototype.onKeydown = function(event) {
   var flag = true;
 
   if(char == 66 && event.ctrlKey) { // ctrl-b
-    document.execCommand('bold', null, null);
+    document.execCommand("bold", null, null);
   }
 
   else if(char == 73 && event.ctrlKey) { // ctrl-i
-    document.execCommand('italic', false, null);
+    document.execCommand("italic", false, null);
   }
 
   else if(char == 85 && event.ctrlKey) { // ctrl-u
     document.execCommand("underline", false, null);
   }
 
-  else if(char == 8 || char == 127) { // delete / backspace?
+  else if(char == 8 || char == 127) { // delete / backspace
     document.execCommand("delete", false, null);
+  }
+
+  else if(char == 10 || char == 13) { // line feed / carriage return (enter / return key)
+    document.execCommand("insertText", false, "\n");
   }
 
   else flag = false;
@@ -74,7 +78,7 @@ Page.prototype.onKeydown = function(event) {
 }
 
 Page.prototype.onKeypress = function(e) {
-  document.execCommand('insertText', false, e.char || String.fromCharCode(e.charCode));
+  document.execCommand("insertText", false, e.char || String.fromCharCode(e.charCode));
 
   e.preventDefault();
 }
