@@ -1,17 +1,16 @@
-// containerContainer is a DOM element in which the Riddle editor is contained
-
-function Riddle(containerContainer) {
+function Riddle() {
   window.riddle = this;
   var that = this;
 
-  this.containerContainer = containerContainer;
+  this.containerContainer = document.createElement("div");
+  document.body.appendChild(this.containerContainer);
 
   // generate toolbar
   this.toolbar = document.createElement("div");
   this.toolbar.className = "riddle-toolbar";
   this.toolbarLeft = 0;
 
-  this.generateDropdown(
+  this.fontDrop = this.generateDropdown(
     ["monospace", "Times", "Arial", "Verdana"],
     function(element, name) {
       element.style.fontFamiy = name;
@@ -23,7 +22,7 @@ function Riddle(containerContainer) {
   );
 
   setTimeout(function() {
-    that.generateDropdown(
+    this.fontSizeDrop = that.generateDropdown(
       [1, 2, 3, 4, 5, 6, 7],
       function(element, name) {},
       function(fontSize) {
@@ -43,6 +42,12 @@ function Riddle(containerContainer) {
 
   // contenteditable creates a very crude text editor in modern browsers. sweet, huh?
   this.container.setAttribute("contenteditable", "true");
+  setTimeout(function() {
+    that.container.focus();
+    document.execCommand("fontName", null, "Times"); // fixes bug with menu
+    document.execCommand("fontSize", null, 7); // fixes bug with menu
+    that.updateToolbar();
+  }, 0);
 
   // setup events for smooth editing
 
@@ -129,6 +134,8 @@ Riddle.prototype.onKeydown = function(event) {
   }
 
   else flag = false;
+
+  this.updateToolbar();
 
   if(flag) {
     event.preventDefault();
@@ -240,6 +247,17 @@ Riddle.prototype.generateDropdown = function(options, stylizeOption, handler, ca
     that.toolbarLeft += mainOption.offsetWidth + 10;
   }, 0);
 
+  return {
+    set: function(a) {
+      mainOption.innerHTML = a;
+      stylizeOption(mainOption, a);
+    }
+  }
+}
+
+Riddle.prototype.updateToolbar = function() {
+  this.fontDrop.set(document.queryCommandValue("fontName"));
+  if(this.fontSizeDrop) this.fontSizeDrop.set(document.queryCommandValue("fontSize"));
 }
 
 // implement printing for FF

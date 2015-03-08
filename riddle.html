@@ -44,6 +44,8 @@
     height: 92%;
     overflow: auto;
     z-index: 100;
+    font-family: Times;
+    font-size: 3;
   }
 
   </style>
@@ -53,16 +55,13 @@
   var editor;
 
   window.addEventListener("load", function() {
-    editor = new Riddle(document.getElementById("editor"));
+    editor = new Riddle();
   });
 
   </script>
 
 </head>
 <body>
-
-<div id="editor">
-</div>
 
 </body>
 </html>
